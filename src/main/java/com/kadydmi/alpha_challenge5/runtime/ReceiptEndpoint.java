@@ -36,14 +36,14 @@ public class ReceiptEndpoint implements DecisionEndpoint {
     private ResponseReceiptNoPromoDto createResponseDtoNoPromo(RequestReceiptNoPromoDTO dto) {
         List<ResponseReceiptPositionDto> responsePositions = new ArrayList<>();
         BigDecimal total = BigDecimal.valueOf(0);
-        BigDecimal discount = new BigDecimal("0").setScale(2, RoundingMode.HALF_EVEN);
+        BigDecimal discount = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_EVEN);
         for(RequestReceiptPositionDto pos : dto.getPositions()) {
             Item item = csvReader.getItems().get(pos.getItemId());
             BigDecimal posTotalPrice = item.getPrice().multiply(new BigDecimal(pos.getQuantity()));
             total = total.add(posTotalPrice);
             responsePositions.add(createPosition(pos.getItemId(), item));
         }
-
+        total = total.setScale(2, RoundingMode.HALF_EVEN);
         return new ResponseReceiptNoPromoDto(total, discount, responsePositions);
     }
 

@@ -43,7 +43,6 @@ public class CsvReader {
             br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-//                System.out.println(values[1]);
                 Item item = new Item(values[1], values[values.length-2], new BigDecimal(values[values.length-1]).setScale(2, RoundingMode.HALF_EVEN));
                 items.put(values[0], item);
             }

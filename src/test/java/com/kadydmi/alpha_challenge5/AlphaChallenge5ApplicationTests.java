@@ -1,6 +1,7 @@
 package com.kadydmi.alpha_challenge5;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,7 +39,7 @@ class AlphaChallenge5ApplicationTests {
 	}
 
 	@Test
-	public void testInitReceipt() {
+	public void testInitReceipt() throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Integer>> positions = new ArrayList<>();
 		positions.add(Map.of("itemId", 3432166, "quantity", 1));
@@ -53,6 +54,9 @@ class AlphaChallenge5ApplicationTests {
 				.exchange()
 				.expectStatus().isEqualTo(200);
 		EntityExchangeResult<String> responseContext = responseSpec.expectBody(String.class).returnResult();
+		JsonNode result = mapper.reader().readTree(responseContext.getResponseBody());
+		Assertions.assertEquals(result.get("total").asDouble(), 141.99);
+		Assertions.assertEquals(result.get("discount").asDouble(), 0.00);
 		Assertions.assertNotNull(responseContext.getResponseBody());
 	}
 
