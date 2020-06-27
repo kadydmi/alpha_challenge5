@@ -4,6 +4,9 @@ import com.kadydmi.alpha_challenge5.cvso.Item;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -16,19 +19,23 @@ import java.util.*;
 @Component
 @Slf4j
 public class CsvReader {
+    @Autowired
+    ResourceLoader resourceLoader;
+
     private Map<String, String> groups = new HashMap<>();
     private Map<String, Item> items = new HashMap<>();
 
     @PostConstruct
     public void postConstruct() throws IOException {
-        readGroups("src/main/resources/groups.csv");
-        log.info("finish reading groups");
-        readItems("src/main/resources/items.csv");
-        log.info("finish reading items");
+        readGroups("classpath:groups.csv");
+        log.info("finished reading groups");
+        readItems("classpath:items.csv");
+        log.info("finished reading items");
     }
 
     public void readGroups(String filename) throws IOException {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"))) {
+        Resource resource = resourceLoader.getResource(filename);
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream(), "UTF8"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
@@ -38,7 +45,8 @@ public class CsvReader {
     }
 
     public void readItems(String filename) throws IOException {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"))) {
+        Resource resource = resourceLoader.getResource(filename);
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream(), "UTF8"))) {
             String line;
             br.readLine();
             while ((line = br.readLine()) != null) {
