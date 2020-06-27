@@ -7,6 +7,7 @@ import com.kadydmi.alpha_challenge5.dtos.RequestReceiptPositionDto;
 import com.kadydmi.alpha_challenge5.dtos.ResponseReceiptPositionDto;
 import com.kadydmi.alpha_challenge5.dtos.ResponseReceiptNoPromoDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -17,13 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Slf4j
 public class ReceiptEndpoint implements DecisionEndpoint {
 
     private final CsvReader csvReader;
 
     @Override
     public Mono<ServerResponse> processReq(ServerRequest serverRequest) {
-        System.out.println("receipt");
+        log.debug("receipt");
         return serverRequest.bodyToMono(RequestReceiptNoPromoDTO.class)
                 .flatMap(this::responseWithBody);
     }
