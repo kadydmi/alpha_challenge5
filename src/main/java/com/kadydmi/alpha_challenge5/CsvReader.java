@@ -16,7 +16,6 @@ import java.math.RoundingMode;
 import java.util.*;
 
 @Getter
-@Component
 @Slf4j
 public class CsvReader {
     @Autowired
